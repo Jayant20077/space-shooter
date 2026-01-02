@@ -1,0 +1,78 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #020617, #000);
+  color: white;
+  min-height: 100vh;
+}
+
+/* START SCREEN */
+.start-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.start-screen h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.start-screen p {
+  opacity: 0.8;
+  margin-bottom: 25px;
+}
+
+.start-screen button {
+  padding: 14px 40px;
+  border-radius: 30px;
+  border: none;
+  background: #22c55e;
+  color: black;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* GAME */
+.hidden {
+  display: none;
+}
+
+.game {
+  padding-top: 20px;
+  text-align: center;
+}
+
+.score {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.game-area {
+  width: 320px;
+  height: 480px;
+  background: radial-gradient(circle at center, #020617, #000);
+  margin: 0 auto;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* PLAYER SHIP */
+.player {
+  width: 40px;
+  height: 40px;
+  background: #38bdf8;
+  position: absolute;
+  bottom: 10px;
+  left: 140px;
+  border-radius: 6px;
+}
