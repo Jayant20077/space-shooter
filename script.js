@@ -7,3 +7,4 @@ startBtn.addEventListener("click", () => {
   game.classList.remove("hidden");
 });
 
+
