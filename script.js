@@ -6,3 +6,4 @@ startBtn.addEventListener("click", () => {
   startScreen.classList.add("hidden");
   game.classList.remove("hidden");
 });
+
