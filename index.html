@@ -10,27 +10,20 @@
   <!-- START SCREEN -->
   <div id="startScreen" class="screen">
     <h1>🚀 Space Shooter</h1>
-    <p>Move with ← → | Shoot with SPACE</p>
+    <p>Destroy enemies and survive as long as possible</p>
     <button id="startBtn">Start Game</button>
   </div>
 
-  <!-- GAME AREA -->
-  <div id="game" class="hidden">
+  <!-- GAME SCREEN -->
+  <div id="gameScreen" class="screen hidden">
     <div class="hud">
       <span id="score">Score: 0</span>
-      <span id="lives">❤️ 3</span>
+      <span id="highScore">High Score: 0</span>
     </div>
 
-    <div id="gameArea">
-      <div id="player"></div>
-    </div>
-  </div>
+    <canvas id="gameCanvas" width="300" height="400"></canvas>
 
-  <!-- GAME OVER SCREEN -->
-  <div id="gameOverScreen" class="screen hidden">
-    <h1>💀 Game Over</h1>
-    <p id="finalScore">Score: 0</p>
-    <button id="restartBtn">Restart</button>
+    <button id="restartBtn" class="restart">Restart</button>
   </div>
 
   <script src="script.js"></script>
