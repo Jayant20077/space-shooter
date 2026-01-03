@@ -1,163 +1,141 @@
+const startScreen = document.getElementById("startScreen");
+const gameScreen = document.getElementById("gameScreen");
 const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
 
-const startScreen = document.getElementById("startScreen");
-const game = document.getElementById("game");
-const gameOverScreen = document.getElementById("gameOverScreen");
-
-const gameArea = document.getElementById("gameArea");
-const player = document.getElementById("player");
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
 const scoreEl = document.getElementById("score");
-const livesEl = document.getElementById("lives");
-const finalScoreEl = document.getElementById("finalScore");
+const highScoreEl = document.getElementById("highScore");
 
+let player, bullets, enemies;
 let score = 0;
-let lives = 3;
-let playerX = 130;
 let gameInterval;
 let enemyInterval;
 
-// 🔥 HIGH SCORE
-let highScore = localStorage.getItem("spaceShooterHighScore") || 0;
+let highScore = localStorage.getItem("highScore") || 0;
+highScoreEl.textContent = `High Score: ${highScore}`;
 
-const highScoreDisplay = document.createElement("div");
-highScoreDisplay.style.marginTop = "6px";
-highScoreDisplay.textContent = `High Score: ${highScore}`;
-document.querySelector(".hud").appendChild(highScoreDisplay);
+// ---------- START GAME ----------
+startBtn.addEventListener("click", startGame);
+restartBtn.addEventListener("click", startGame);
 
-startBtn.onclick = startGame;
-restartBtn.onclick = restartGame;
-
-// START GAME
 function startGame() {
-  resetGame();
   startScreen.classList.add("hidden");
-  game.classList.remove("hidden");
+  gameScreen.classList.remove("hidden");
 
-  document.addEventListener("keydown", movePlayer);
-  document.addEventListener("keydown", shoot);
-
-  gameInterval = setInterval(moveEnemies, 20);
-  enemyInterval = setInterval(createEnemy, 1000);
+  resetGame();
+  gameLoop();
+  spawnEnemies();
 }
 
-// RESET GAME
+// ---------- RESET ----------
 function resetGame() {
+  clearInterval(gameInterval);
+  clearInterval(enemyInterval);
+
+  player = { x: 140, y: 350, size: 20 };
+  bullets = [];
+  enemies = [];
   score = 0;
-  lives = 3;
-  playerX = 130;
 
   scoreEl.textContent = "Score: 0";
-  livesEl.textContent = "❤️ 3";
-  highScoreDisplay.textContent = `High Score: ${highScore}`;
-
-  player.style.left = playerX + "px";
-  gameArea.querySelectorAll(".enemy, .bullet").forEach(e => e.remove());
 }
 
-// PLAYER MOVEMENT
-function movePlayer(e) {
-  if (e.key === "ArrowLeft" && playerX > 0) playerX -= 20;
-  if (e.key === "ArrowRight" && playerX < 260) playerX += 20;
-  player.style.left = playerX + "px";
+// ---------- GAME LOOP ----------
+function gameLoop() {
+  gameInterval = setInterval(update, 20);
 }
 
-// SHOOT
-function shoot(e) {
-  if (e.code === "Space") {
-    const bullet = document.createElement("div");
-    bullet.className = "bullet";
-    bullet.style.left = playerX + 17 + "px";
-    bullet.style.bottom = "50px";
-    gameArea.appendChild(bullet);
+function update() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const bulletInterval = setInterval(() => {
-      let bottom = parseInt(bullet.style.bottom);
-      bullet.style.bottom = bottom + 10 + "px";
-
-      if (bottom > 400) {
-        bullet.remove();
-        clearInterval(bulletInterval);
-      }
-
-      document.querySelectorAll(".enemy").forEach(enemy => {
-        if (isColliding(bullet, enemy)) {
-          bullet.remove();
-          enemy.remove();
-          clearInterval(bulletInterval);
-
-          score++;
-          scoreEl.textContent = "Score: " + score;
-
-          if (score > highScore) {
-            highScore = score;
-            localStorage.setItem("spaceShooterHighScore", highScore);
-            highScoreDisplay.textContent = `High Score: ${highScore}`;
-          }
-        }
-      });
-    }, 20);
-  }
+  drawPlayer();
+  drawBullets();
+  drawEnemies();
+  moveBullets();
+  moveEnemies();
+  checkCollisions();
 }
 
-// CREATE ENEMY
-function createEnemy() {
-  const enemy = document.createElement("div");
-  enemy.className = "enemy";
-  enemy.style.top = "0px";
-  enemy.style.left = Math.random() * 260 + "px";
-  gameArea.appendChild(enemy);
+// ---------- PLAYER ----------
+function drawPlayer() {
+  ctx.fillStyle = "#38bdf8";
+  ctx.fillRect(player.x, player.y, player.size, player.size);
 }
 
-// MOVE ENEMIES
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft" && player.x > 0) player.x -= 10;
+  if (e.key === "ArrowRight" && player.x < canvas.width - player.size)
+    player.x += 10;
+  if (e.key === " ") shoot();
+});
+
+// ---------- BULLETS ----------
+function shoot() {
+  bullets.push({ x: player.x + 8, y: player.y });
+}
+
+function drawBullets() {
+  ctx.fillStyle = "yellow";
+  bullets.forEach(b => ctx.fillRect(b.x, b.y, 4, 10));
+}
+
+function moveBullets() {
+  bullets.forEach(b => (b.y -= 5));
+  bullets = bullets.filter(b => b.y > 0);
+}
+
+// ---------- ENEMIES ----------
+function spawnEnemies() {
+  enemyInterval = setInterval(() => {
+    enemies.push({ x: Math.random() * 270, y: 0, size: 20 });
+  }, 1000);
+}
+
+function drawEnemies() {
+  ctx.fillStyle = "red";
+  enemies.forEach(e => ctx.fillRect(e.x, e.y, e.size, e.size));
+}
+
 function moveEnemies() {
-  document.querySelectorAll(".enemy").forEach(enemy => {
-    let top = parseInt(enemy.style.top);
-    enemy.style.top = top + 2 + "px";
+  enemies.forEach(e => (e.y += 2));
+}
 
-    if (top > 360) {
-      enemy.remove();
-      loseLife();
+// ---------- COLLISIONS ----------
+function checkCollisions() {
+  enemies.forEach((enemy, ei) => {
+    bullets.forEach((bullet, bi) => {
+      if (
+        bullet.x < enemy.x + enemy.size &&
+        bullet.x + 4 > enemy.x &&
+        bullet.y < enemy.y + enemy.size &&
+        bullet.y + 10 > enemy.y
+      ) {
+        enemies.splice(ei, 1);
+        bullets.splice(bi, 1);
+        score++;
+        scoreEl.textContent = `Score: ${score}`;
+
+        if (score > highScore) {
+          highScore = score;
+          localStorage.setItem("highScore", highScore);
+          highScoreEl.textContent = `High Score: ${highScore}`;
+        }
+      }
+    });
+
+    if (enemy.y > canvas.height) {
+      gameOver();
     }
   });
 }
 
-// LIFE LOST
-function loseLife() {
-  lives--;
-  livesEl.textContent = "❤️ " + lives;
-  if (lives <= 0) endGame();
-}
-
-// GAME OVER
-function endGame() {
+// ---------- GAME OVER ----------
+function gameOver() {
   clearInterval(gameInterval);
   clearInterval(enemyInterval);
-
-  document.removeEventListener("keydown", movePlayer);
-  document.removeEventListener("keydown", shoot);
-
-  finalScoreEl.textContent = `Score: ${score} | High Score: ${highScore}`;
-
-  game.classList.add("hidden");
-  gameOverScreen.classList.remove("hidden");
-}
-
-// RESTART
-function restartGame() {
-  gameOverScreen.classList.add("hidden");
   startScreen.classList.remove("hidden");
-}
-
-// COLLISION
-function isColliding(a, b) {
-  const ar = a.getBoundingClientRect();
-  const br = b.getBoundingClientRect();
-  return !(
-    ar.top > br.bottom ||
-    ar.bottom < br.top ||
-    ar.left > br.right ||
-    ar.right < br.left
-  );
+  gameScreen.classList.add("hidden");
 }
