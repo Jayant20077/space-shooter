@@ -1,78 +1,96 @@
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
 body {
-  background: radial-gradient(circle at top, #020617, #000);
-  color: white;
-  min-height: 100vh;
-}
-
-/* START SCREEN */
-.start-screen {
+  margin: 0;
   height: 100vh;
+  background: radial-gradient(circle at top, #0f2027, #000);
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  color: white;
 }
 
-.start-screen h1 {
-  font-size: 3rem;
-  margin-bottom: 10px;
-}
-
-.start-screen p {
-  opacity: 0.8;
-  margin-bottom: 25px;
-}
-
-.start-screen button {
-  padding: 14px 40px;
-  border-radius: 30px;
-  border: none;
-  background: #22c55e;
-  color: black;
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-
-/* GAME */
 .hidden {
   display: none;
 }
 
-.game {
-  padding-top: 20px;
+/* SCREENS */
+.screen {
   text-align: center;
 }
 
-.score {
+.screen h1 {
+  font-size: 3rem;
   margin-bottom: 10px;
-  font-size: 1.2rem;
 }
 
-.game-area {
-  width: 320px;
-  height: 480px;
-  background: radial-gradient(circle at center, #020617, #000);
-  margin: 0 auto;
+.screen button {
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  border: none;
   border-radius: 10px;
+  background: #6c63ff;
+  color: white;
+  cursor: pointer;
+}
+
+.screen button:hover {
+  background: #584fe0;
+}
+
+/* GAME */
+#game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hud {
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+#gameArea {
+  width: 300px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
 }
 
-/* PLAYER SHIP */
-.player {
+/* PLAYER */
+#player {
   width: 40px;
   height: 40px;
-  background: #38bdf8;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
   position: absolute;
   bottom: 10px;
-  left: 140px;
-  border-radius: 6px;
+  left: 130px;
+  border-radius: 8px;
+}
+
+/* BULLET */
+.bullet {
+  width: 6px;
+  height: 12px;
+  background: yellow;
+  position: absolute;
+  border-radius: 3px;
+}
+
+/* ENEMY */
+.enemy {
+  width: 35px;
+  height: 35px;
+  background: crimson;
+  position: absolute;
+  border-radius: 50%;
 }

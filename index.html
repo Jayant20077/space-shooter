@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Space Shooter</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <!-- START SCREEN -->
-  <section class="start-screen" id="startScreen">
+  <div id="startScreen" class="screen">
     <h1>🚀 Space Shooter</h1>
-    <p>Destroy incoming enemies and survive as long as possible</p>
+    <p>Move with ← → | Shoot with SPACE</p>
     <button id="startBtn">Start Game</button>
-  </section>
+  </div>
 
   <!-- GAME AREA -->
-  <section class="game hidden" id="game">
-    <div class="score">Score: <span id="score">0</span></div>
-    <div class="game-area" id="gameArea">
-      <div class="player" id="player"></div>
+  <div id="game" class="hidden">
+    <div class="hud">
+      <span id="score">Score: 0</span>
+      <span id="lives">❤️ 3</span>
     </div>
-  </section>
+
+    <div id="gameArea">
+      <div id="player"></div>
+    </div>
+  </div>
+
+  <!-- GAME OVER SCREEN -->
+  <div id="gameOverScreen" class="screen hidden">
+    <h1>💀 Game Over</h1>
+    <p id="finalScore">Score: 0</p>
+    <button id="restartBtn">Restart</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
